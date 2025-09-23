@@ -1,1 +1,3 @@
 # Project Nexus
+
+An E-Commerce website that where users can create accounts and shop for different clothes including hoodies, shorts, vests, shirts, t-shirts, socks etc...
