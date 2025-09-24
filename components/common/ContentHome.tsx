@@ -1,7 +1,16 @@
-import React from "react";
+"use client";
+
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const ContentHome = () => {
-	return <section className="">This is the home page content!!</section>;
+	const { num, status } = useSelector((state: RootState) => state.num);
+
+	const dispatch = useDispatch();
+
+	console.log(num);
+
+	return <section>This is the content page</section>;
 };
 
 export default ContentHome;
