@@ -4,7 +4,7 @@ import Header from "../../components/layout/Header";
 
 export default function Home() {
 	return (
-		<main className="relative flex-col">
+		<main className="">
 			<Header />
 			<ContentHome />
 			<Footer />
