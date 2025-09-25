@@ -4,4 +4,16 @@
 	.custom-bg-color {
 		@apply bg-blue-500;
 	}
+
+	.custom-blue-text {
+		@apply text-blue-500;
+	}
+
+	.nav-btn {
+		@apply text-sm text-white rounded-md bg-blue-500 h-[1.5em] min-w-[7em] px-2 cursor-pointer focus:bg-blue-700 sm:h-[2em];
+	}
+
+	.red-border {
+		@apply border-2 border-solid border-red-500;
+	}
 }
