@@ -1,6 +1,6 @@
 const Header = () => {
 	return (
-		<header className="custom-bg-color h-[120px] flex space-x-6 items-center p-3 text-white sticky top-0 w-full shadow-md">
+		<header className="custom-bg-color h-[100px] flex space-x-6 items-center p-3 text-white sticky top-0 w-full shadow-md z-10">
 			<h2 className="text-3xl font-bold font-serif underline">
 				G<span className="text-xl opacity-80">ikosh</span>
 			</h2>
