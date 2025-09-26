@@ -28,12 +28,22 @@ const initialState: ProductState = {
 	error: null,
 };
 
-export const fetchProducts = createAsyncThunk<Product[]>(
+export const fetchProducts = createAsyncThunk<Product[], string>(
 	"products/fetchProducts",
-	async () => {
-		const response = await axios.get("");
+	async (category: string) => {
+		if (category.includes("all") || !category) {
+			const response = await axios.get<Product[]>("");
 
-		return response.data;
+			return response.data;
+		} else {
+			const response = await axios.get<Product[]>("", {
+				params: {
+					categorySlug: `${category}`,
+				},
+			});
+
+			return response.data;
+		}
 	}
 );
 
