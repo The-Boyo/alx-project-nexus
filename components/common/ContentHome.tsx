@@ -7,19 +7,35 @@ import { fetchProducts, Product } from "../../slices/productSlice";
 import Image from "next/image";
 
 export const shortenTitle = (title: string) => {
-	const arr = title.split(" ");
+	const allTitle = title.split(" ").join("");
 
-	const newTitle: Array<string> = [];
+	const oneLetterArray = allTitle.split("");
 
-	for (let i = 0; i < arr.length - 1; i++) {
-		if (i < 5) {
-			newTitle.push(arr[i]);
-		} else {
-			break;
-		}
+	const shortTitle: Array<string> = [];
+
+	for (let i = 0; i <= oneLetterArray.length - 1; i++) {
+		if (i <= 35) {
+			shortTitle.push(oneLetterArray[i]);
+		} else break;
 	}
 
-	return newTitle.join(" ");
+	const addSpace: Array<string> = [];
+
+	shortTitle.forEach((letter) => {
+		if (letter === letter.toUpperCase()) {
+			addSpace.push(" ", letter);
+		} else {
+			addSpace.push(letter);
+		}
+	});
+
+	const newTitle = addSpace.join("");
+
+	if (newTitle.includes(title)) {
+		return newTitle;
+	} else {
+		return `${addSpace.join("")}...`;
+	}
 };
 
 const ContentHome = () => {
@@ -46,6 +62,7 @@ const ContentHome = () => {
 	};
 
 	console.log(shortenTitle("Classic Navy Blue Baseball Cap"));
+	console.log(shortenTitle("Sleek Wireless Headphone & Inked Earbud Set"));
 
 	const renderProducts = () => {
 		if (status === "loading" || status === "idle")
@@ -74,10 +91,10 @@ const ContentHome = () => {
 								alt={product.title}
 								width={100}
 								height={120}
-								style={{ height: "70%", width: "100%" }}
+								style={{ height: "60%", width: "100%" }}
 							/>
-							<h2 className="mb-2 font-bold opacity-75 min-h-[20%]">
-								{product.title}
+							<h2 className="mb-2 font-bold opacity-75 min-h-[20%] h-[30%]">
+								{shortenTitle(product.title)}
 							</h2>
 							<div className="flex justify-between">
 								<p className="font-bold text-lg ml-1">${product.price}</p>
