@@ -1,3 +1,5 @@
+import Footer from "../../components/layout/Footer";
+import Header from "../../components/layout/Header";
 import Providers from "../../store/providers";
 import "./globals.css";
 
@@ -9,7 +11,11 @@ export default function RootLayout({
 	return (
 		<html>
 			<body>
-				<Providers>{children}</Providers>
+				<Providers>
+					<Header />
+					{children}
+					<Footer />
+				</Providers>
 			</body>
 		</html>
 	);

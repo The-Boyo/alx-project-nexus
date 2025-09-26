@@ -5,6 +5,7 @@ import { AppDispatch, RootState } from "../../store/store";
 import { useEffect } from "react";
 import { fetchProducts, Product } from "../../slices/productSlice";
 import Image from "next/image";
+import { placeOrder } from "../../slices/orderSlice";
 
 export const shortenTitle = (title: string) => {
 	const allTitle = title.split(" ").join("");
@@ -38,6 +39,8 @@ export const shortenTitle = (title: string) => {
 	}
 };
 
+/**FUNCTIONAL COMPONENT */
+
 const ContentHome = () => {
 	const { products, status, error } = useSelector(
 		(state: RootState) => state.products
@@ -54,15 +57,17 @@ const ContentHome = () => {
 	console.log(products);
 
 	const displayProducts = (event: React.MouseEvent<HTMLButtonElement>) => {
-		console.log(event.currentTarget.className.split(" ")[1]);
-
 		const productCategory = event.currentTarget.className.split(" ")[1];
 
 		dispatch(fetchProducts(productCategory));
 	};
 
-	console.log(shortenTitle("Classic Navy Blue Baseball Cap"));
-	console.log(shortenTitle("Sleek Wireless Headphone & Inked Earbud Set"));
+	const PlaceOrder = (
+		e: React.MouseEvent<HTMLButtonElement>,
+		product: Product
+	) => {
+		dispatch(placeOrder(product));
+	};
 
 	const renderProducts = () => {
 		if (status === "loading" || status === "idle")
@@ -72,7 +77,7 @@ const ContentHome = () => {
 			return <h3 className="text-red-500 text-xl">{error}</h3>;
 
 		return (
-			<ul className="grid [grid-template-columns:repeat(auto-fill,_minmax(200px,_1.5fr))]  gap-y-9 gap-x-5">
+			<ul className="grid [grid-template-columns:repeat(auto-fill,_minmax(170px,_1.5fr))] gap-y-3 gap-x-2 sm:gap-y-9 sm:gap-x-5">
 				{products?.map((product: Product) => {
 					if (/[0-9]/.test(product.title)) {
 						return null;
@@ -98,7 +103,14 @@ const ContentHome = () => {
 							</h2>
 							<div className="flex justify-between">
 								<p className="font-bold text-lg ml-1">${product.price}</p>
-								<button className="nav-btn">Add</button>
+								<button
+									onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+										PlaceOrder(e, product)
+									}
+									className="nav-btn"
+								>
+									Add
+								</button>
 							</div>
 						</li>
 					);
@@ -108,7 +120,7 @@ const ContentHome = () => {
 	};
 
 	return (
-		<section className="flex-col p-2">
+		<main className="flex-col p-2">
 			<div className="sticky top-[100px] bg-white z-10">
 				<h2 className="text-lg text-center pt-3 pb-5 mb-2 custom-blue-text font-bold">
 					All in one MarketPlace
@@ -138,7 +150,7 @@ const ContentHome = () => {
 				</nav>
 			</div>
 			{renderProducts()}
-		</section>
+		</main>
 	);
 };
 
