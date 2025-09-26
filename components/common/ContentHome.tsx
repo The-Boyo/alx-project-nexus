@@ -6,6 +6,22 @@ import { useEffect } from "react";
 import { fetchProducts, Product } from "../../slices/productSlice";
 import Image from "next/image";
 
+export const shortenTitle = (title: string) => {
+	const arr = title.split(" ");
+
+	const newTitle: Array<string> = [];
+
+	for (let i = 0; i < arr.length - 1; i++) {
+		if (i < 5) {
+			newTitle.push(arr[i]);
+		} else {
+			break;
+		}
+	}
+
+	return newTitle.join(" ");
+};
+
 const ContentHome = () => {
 	const { products, status, error } = useSelector(
 		(state: RootState) => state.products
@@ -15,11 +31,21 @@ const ContentHome = () => {
 
 	useEffect(() => {
 		if (status === "idle") {
-			dispatch(fetchProducts());
+			dispatch(fetchProducts(""));
 		}
 	}, [status, dispatch]);
 
 	console.log(products);
+
+	const displayProducts = (event: React.MouseEvent<HTMLButtonElement>) => {
+		console.log(event.currentTarget.className.split(" ")[1]);
+
+		const productCategory = event.currentTarget.className.split(" ")[1];
+
+		dispatch(fetchProducts(productCategory));
+	};
+
+	console.log(shortenTitle("Classic Navy Blue Baseball Cap"));
 
 	const renderProducts = () => {
 		if (status === "loading" || status === "idle")
@@ -29,12 +55,16 @@ const ContentHome = () => {
 			return <h3 className="text-red-500 text-xl">{error}</h3>;
 
 		return (
-			<ul className="grid [grid-template-columns:repeat(auto-fill,_minmax(200px,_2fr))]  gap-y-9 gap-x-7">
+			<ul className="grid [grid-template-columns:repeat(auto-fill,_minmax(200px,_1.5fr))]  gap-y-9 gap-x-5">
 				{products?.map((product: Product) => {
+					if (/[0-9]/.test(product.title)) {
+						return null;
+					}
+
 					return (
 						<li
 							key={product.id}
-							className="p-4 w-[200px] flex-cols hover:shadow-lg shadow-blue-500 rounded-lg"
+							className="px-4 py-5 w-[200px] flex-cols hover:shadow-lg shadow-blue-500 rounded-lg"
 						>
 							<Image
 								className="rounded-md mb-1"
@@ -67,13 +97,27 @@ const ContentHome = () => {
 					All in one MarketPlace
 				</h2>
 				<nav className="flex justify-around sticky top-[150px] space-x-4 m-2 pb-3 overflow-x-scroll md:overflow-x-hidden">
-					<button className="nav-btn">All</button>
-					<button className="nav-btn">Clothes</button>
-					<button className="nav-btn">Shoes</button>
-					<button className="nav-btn">Furniture</button>
-					<button className="nav-btn">Electronics</button>
-					<button className="nav-btn">Miscellaneous</button>
-					<button className="nav-btn">Others</button>
+					<button className="nav-btn all" onClick={displayProducts}>
+						All
+					</button>
+					<button className="nav-btn clothes" onClick={displayProducts}>
+						Clothes
+					</button>
+					<button className="nav-btn shoes" onClick={displayProducts}>
+						Shoes
+					</button>
+					<button className="nav-btn furniture" onClick={displayProducts}>
+						Furniture
+					</button>
+					<button className="nav-btn electronics" onClick={displayProducts}>
+						Electronics
+					</button>
+					<button className="nav-btn miscellaneous" onClick={displayProducts}>
+						Miscellaneous
+					</button>
+					<button className="nav-btn others" onClick={displayProducts}>
+						Others
+					</button>
 				</nav>
 			</div>
 			{renderProducts()}
