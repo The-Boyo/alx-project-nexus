@@ -2,7 +2,7 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchProducts, Product } from "../../slices/productSlice";
 import Image from "next/image";
 import { placeOrder } from "../../slices/orderSlice";
@@ -46,7 +46,11 @@ const ContentHome = () => {
 		(state: RootState) => state.products
 	);
 
+	const [added, setAdded] = useState(false);
+
 	const dispatch: AppDispatch = useDispatch();
+
+	const addButtonRef = useRef(null);
 
 	useEffect(() => {
 		if (status === "idle") {
@@ -62,11 +66,24 @@ const ContentHome = () => {
 		dispatch(fetchProducts(productCategory));
 	};
 
-	const PlaceOrder = (
+	const PlaceOrder = async (
 		e: React.MouseEvent<HTMLButtonElement>,
 		product: Product
 	) => {
-		dispatch(placeOrder(product));
+		console.log(e.currentTarget.dataset.id);
+		const { id } = e.currentTarget.dataset;
+
+		const res = await dispatch(placeOrder(product));
+
+		if (
+			res.payload.title === product.title &&
+			id === JSON.stringify(product.id)
+		) {
+			setAdded(true);
+			setTimeout(() => {
+				setAdded(false);
+			}, 1000);
+		}
 	};
 
 	const renderProducts = () => {
@@ -104,12 +121,34 @@ const ContentHome = () => {
 							<div className="flex justify-between">
 								<p className="font-bold text-lg ml-1">${product.price}</p>
 								<button
+									ref={addButtonRef}
 									onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
 										PlaceOrder(e, product)
 									}
-									className="nav-btn"
+									className="nav-btn flex items-center justify-around"
+									data-id={product.id}
 								>
-									Add
+									{added ? (
+										<>
+											<p>Added</p>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												fill="none"
+												viewBox="0 0 24 24"
+												strokeWidth={1.5}
+												stroke="currentColor"
+												className="size-5"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+												/>
+											</svg>
+										</>
+									) : (
+										"Add"
+									)}
 								</button>
 							</div>
 						</li>
