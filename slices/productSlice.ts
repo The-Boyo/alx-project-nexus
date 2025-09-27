@@ -7,12 +7,7 @@ export interface Product {
 	slug: string;
 	price: number;
 	description: string;
-	category: {
-		id: number;
-		name: string;
-		image: string;
-		slug: string;
-	};
+	category: string;
 	images: Array<string>;
 	image: string;
 }
