@@ -14,6 +14,7 @@ export interface Product {
 		slug: string;
 	};
 	images: Array<string>;
+	image: string;
 }
 
 interface ProductState {
