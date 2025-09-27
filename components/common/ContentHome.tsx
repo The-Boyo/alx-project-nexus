@@ -2,10 +2,11 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchProducts, Product } from "../../slices/productSlice";
 import Image from "next/image";
 import { placeOrder } from "../../slices/orderSlice";
+import { generateUniqId } from "../../utils/utilities";
 
 export const shortenTitle = (title: string) => {
 	const allTitle = title.split(" ").join("");
@@ -46,7 +47,12 @@ const ContentHome = () => {
 		(state: RootState) => state.products
 	);
 
+	const [added, setAdded] = useState(false);
+	const [addedOrderId, setOrderId] = useState("");
+
 	const dispatch: AppDispatch = useDispatch();
+
+	const addButtonRef = useRef(null);
 
 	useEffect(() => {
 		if (status === "idle") {
@@ -62,11 +68,26 @@ const ContentHome = () => {
 		dispatch(fetchProducts(productCategory));
 	};
 
-	const PlaceOrder = (
+	const PlaceOrder = async (
 		e: React.MouseEvent<HTMLButtonElement>,
 		product: Product
 	) => {
-		dispatch(placeOrder(product));
+		const { id } = e.currentTarget.dataset;
+
+		const res = await dispatch(
+			placeOrder({ ...product, uniqID: generateUniqId() })
+		);
+
+		if (
+			res.payload.title === product.title &&
+			id === JSON.stringify(product.id)
+		) {
+			setAdded(true);
+			setOrderId(id);
+			setTimeout(() => {
+				setAdded(false);
+			}, 1000);
+		}
 	};
 
 	const renderProducts = () => {
@@ -104,12 +125,34 @@ const ContentHome = () => {
 							<div className="flex justify-between">
 								<p className="font-bold text-lg ml-1">${product.price}</p>
 								<button
+									ref={addButtonRef}
 									onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
 										PlaceOrder(e, product)
 									}
-									className="nav-btn"
+									className="nav-btn flex items-center justify-around"
+									data-id={product.id}
 								>
-									Add
+									{added && addedOrderId === JSON.stringify(product.id) ? (
+										<>
+											<p>Added</p>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												fill="none"
+												viewBox="0 0 24 24"
+												strokeWidth={1.5}
+												stroke="currentColor"
+												className="size-5"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+												/>
+											</svg>
+										</>
+									) : (
+										"Add"
+									)}
 								</button>
 							</div>
 						</li>
@@ -120,7 +163,7 @@ const ContentHome = () => {
 	};
 
 	return (
-		<main className="flex-col p-2">
+		<main className="flex-col flex-1 p-2">
 			<div className="sticky top-[100px] bg-white z-10">
 				<h2 className="text-lg text-center pt-3 pb-5 mb-2 custom-blue-text font-bold">
 					All in one MarketPlace
