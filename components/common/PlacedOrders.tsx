@@ -3,8 +3,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { useEffect } from "react";
-import { fetchProducts, Product } from "../../slices/productSlice";
-import { clearOrders, removeOrder } from "../../slices/orderSlice";
+import { fetchProducts } from "../../slices/productSlice";
+import {
+	clearOrders,
+	OrderedProduct,
+	removeOrder,
+} from "../../slices/orderSlice";
 import Image from "next/image";
 
 const PlacedOrders = () => {
@@ -19,10 +23,10 @@ const PlacedOrders = () => {
 	console.log(orders);
 
 	const renderOrders = () => {
-		return orders?.map((order: Product) => {
+		return orders?.map((order: OrderedProduct) => {
 			return (
 				<li
-					key={`${order.id}+${orders.length}`}
+					key={order.uniqID}
 					className="flex justify-around shadow-sm shadow-blue-400 rounded-md p-3 my-5"
 				>
 					<Image

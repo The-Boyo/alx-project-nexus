@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { fetchProducts, Product } from "../../slices/productSlice";
 import Image from "next/image";
 import { placeOrder } from "../../slices/orderSlice";
+import { generateUniqId } from "../../utils/utilities";
 
 export const shortenTitle = (title: string) => {
 	const allTitle = title.split(" ").join("");
@@ -47,6 +48,7 @@ const ContentHome = () => {
 	);
 
 	const [added, setAdded] = useState(false);
+	const [addedOrderId, setOrderId] = useState("");
 
 	const dispatch: AppDispatch = useDispatch();
 
@@ -70,16 +72,18 @@ const ContentHome = () => {
 		e: React.MouseEvent<HTMLButtonElement>,
 		product: Product
 	) => {
-		console.log(e.currentTarget.dataset.id);
 		const { id } = e.currentTarget.dataset;
 
-		const res = await dispatch(placeOrder(product));
+		const res = await dispatch(
+			placeOrder({ ...product, uniqID: generateUniqId() })
+		);
 
 		if (
 			res.payload.title === product.title &&
 			id === JSON.stringify(product.id)
 		) {
 			setAdded(true);
+			setOrderId(id);
 			setTimeout(() => {
 				setAdded(false);
 			}, 1000);
@@ -128,7 +132,7 @@ const ContentHome = () => {
 									className="nav-btn flex items-center justify-around"
 									data-id={product.id}
 								>
-									{added ? (
+									{added && addedOrderId === JSON.stringify(product.id) ? (
 										<>
 											<p>Added</p>
 											<svg
@@ -159,7 +163,7 @@ const ContentHome = () => {
 	};
 
 	return (
-		<main className="flex-col p-2">
+		<main className="flex-col flex-1 p-2">
 			<div className="sticky top-[100px] bg-white z-10">
 				<h2 className="text-lg text-center pt-3 pb-5 mb-2 custom-blue-text font-bold">
 					All in one MarketPlace

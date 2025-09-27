@@ -1,8 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Product } from "./productSlice";
 
+export interface OrderedProduct extends Product {
+	uniqID: string;
+}
+
 interface OrdersState {
-	orders: Product[] | [];
+	orders: OrderedProduct[] | [];
 }
 
 const initialState: OrdersState = {
@@ -21,7 +25,7 @@ const ordersSlice = createSlice({
 		},
 		removeOrder(state, action) {
 			state.orders = state.orders.filter(
-				(order) => order.id !== action.payload.id
+				(order) => order.uniqID !== action.payload.uniqID
 			);
 		},
 	},
