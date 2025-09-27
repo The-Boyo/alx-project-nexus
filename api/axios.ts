@@ -2,5 +2,6 @@ import axios from "axios";
 
 export default axios.create({
 	// baseURL: "https://api.escuelajs.co/api/v1/products/?categorySlug=clothes",
-	baseURL: "https://api.escuelajs.co/api/v1/products",
+	// baseURL: "https://api.escuelajs.co/api/v1/products",
+	baseURL: "https://fakestoreapi.com/products",
 });

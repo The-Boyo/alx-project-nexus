@@ -98,7 +98,7 @@ const ContentHome = () => {
 			return <h3 className="text-red-500 text-xl">{error}</h3>;
 
 		return (
-			<ul className="grid [grid-template-columns:repeat(auto-fill,_minmax(170px,_1.5fr))] gap-y-3 gap-x-2 sm:gap-y-9 sm:gap-x-5">
+			<ul className="grid [grid-template-columns:repeat(auto-fill,_minmax(180px,_1.5fr))] gap-y-3 gap-x-2 sm:gap-y-9 sm:gap-x-5">
 				{products?.map((product: Product) => {
 					if (/[0-9]/.test(product.title)) {
 						return null;
@@ -113,11 +113,11 @@ const ContentHome = () => {
 								className="rounded-md mb-1"
 								unoptimized
 								priority
-								src={product.images[0]}
+								src={product.image}
 								alt={product.title}
 								width={100}
 								height={120}
-								style={{ height: "60%", width: "100%" }}
+								style={{ height: "60%", width: "80%" }}
 							/>
 							<h2 className="mb-2 font-bold opacity-75 min-h-[20%] h-[30%]">
 								{shortenTitle(product.title)}
