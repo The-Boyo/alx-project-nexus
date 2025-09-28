@@ -49,7 +49,7 @@ const PlacedOrders = () => {
 	const renderOrders = () => {
 		if (orders.length < 1) {
 			return (
-				<Link href="/" className="text-blue-700 underline ">
+				<Link href="/" className="text-blue-700 underline">
 					<h3>Click to shop</h3>
 				</Link>
 			);
@@ -126,7 +126,10 @@ const PlacedOrders = () => {
 		const displayPurchases = () => {
 			return purchases.map((purchase: OrderedProduct) => {
 				return (
-					<li key={purchase.uniqID}>
+					<li
+						key={purchase.uniqID}
+						className="shadow-md shadow-black rounded-md p-2"
+					>
 						<Image
 							className="rounded-md justify-self-center"
 							unoptimized
@@ -152,10 +155,7 @@ const PlacedOrders = () => {
 							<p className="text-sm px-2">{purchase.description}</p>
 						</div>
 						<div className="flex justify-end space-x-3 px-3 text-white mb-1">
-							<button
-								onClick={(e) => productPurchased(e, purchase)}
-								className="text-md font-bold custom-bg-color rounded-md px-4 h-8 shadow-md shadow-black border-b-1 border-b-black"
-							>
+							<button className="text-md font-bold custom-bg-color rounded-md px-4 h-8 shadow-md shadow-black border-b-1 border-b-black">
 								Purchased
 							</button>
 						</div>
@@ -165,7 +165,11 @@ const PlacedOrders = () => {
 		};
 
 		if (content === "purchases") {
-			return <ul>{displayPurchases()}</ul>;
+			return (
+				<ul className="grid [grid-template-columns:repeat(auto-fill,_minmax(250px,_1.5fr))] gap-7 p-2">
+					{displayPurchases()}
+				</ul>
+			);
 		}
 	};
 

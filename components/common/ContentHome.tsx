@@ -7,8 +7,9 @@ import { fetchProducts, Product } from "../../slices/productSlice";
 import Image from "next/image";
 import { placeOrder } from "../../slices/orderSlice";
 import { generateUniqId } from "../../utils/utilities";
+import { useRouter } from "next/navigation";
 
-export const shortenTitle = (title: string) => {
+export const shortenTitle = (title: string, num: number) => {
 	const allTitle = title.split(" ").join("");
 
 	const oneLetterArray = allTitle.split("");
@@ -16,7 +17,7 @@ export const shortenTitle = (title: string) => {
 	const shortTitle: Array<string> = [];
 
 	for (let i = 0; i <= oneLetterArray.length - 1; i++) {
-		if (i <= 35) {
+		if (i <= num) {
 			shortTitle.push(oneLetterArray[i]);
 		} else break;
 	}
@@ -47,10 +48,14 @@ const ContentHome = () => {
 		(state: RootState) => state.products
 	);
 
+	const { orders } = useSelector((state: RootState) => state.orders);
+
 	const [added, setAdded] = useState(false);
 	const [addedOrderId, setOrderId] = useState("");
 
 	const dispatch: AppDispatch = useDispatch();
+
+	const router = useRouter();
 
 	const addButtonRef = useRef(null);
 
@@ -120,7 +125,7 @@ const ContentHome = () => {
 								style={{ height: "60%", width: "80%" }}
 							/>
 							<h2 className="mb-2 font-bold opacity-75 min-h-[20%] h-[30%]">
-								{shortenTitle(product.title)}
+								{shortenTitle(product.title, 35)}
 							</h2>
 							<div className="flex justify-between">
 								<p className="font-bold text-lg ml-1">${product.price}</p>
@@ -158,6 +163,14 @@ const ContentHome = () => {
 						</li>
 					);
 				})}
+				{orders.length < 1 ? null : (
+					<button
+						onClick={() => router.push("/orders")}
+						className="bg-black fixed bottom-5 justify-self-center rounded-2xl py-2 px-3 text-white text-md font-semibold shadow-black shadow-md"
+					>
+						View Cart
+					</button>
+				)}
 			</ul>
 		);
 	};
