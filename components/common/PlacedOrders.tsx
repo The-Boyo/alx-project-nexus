@@ -12,10 +12,13 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { addPurchase } from "../../slices/purchasedItemsSlice";
+import { useRouter } from "next/navigation";
 
 const PlacedOrders = () => {
 	const orders = useSelector((state: RootState) => state.orders.orders);
-	const { purchases } = useSelector((state: RootState) => state.purchases);
+	const { purchases, payStatus } = useSelector(
+		(state: RootState) => state.purchases
+	);
 
 	const dispatch: AppDispatch = useDispatch();
 
@@ -24,13 +27,16 @@ const PlacedOrders = () => {
 	const [openModal, setModal] = useState(false);
 	const [toBuy, setOrderToBuy] = useState<OrderedProduct | null>(null);
 
+	//Navigation
+	const router = useRouter();
+
 	useEffect(() => {
 		dispatch(fetchProducts(""));
-	});
 
-	console.log(orders);
-	console.log(toBuy);
-	console.log(purchases);
+		if (payStatus === "success") {
+			setContent("purchases");
+		}
+	}, [dispatch, payStatus]);
 
 	const purchaseItem = (
 		event: React.MouseEvent<HTMLButtonElement>,
@@ -117,8 +123,49 @@ const PlacedOrders = () => {
 			);
 		}
 
+		const displayPurchases = () => {
+			return purchases.map((purchase: OrderedProduct) => {
+				return (
+					<li key={purchase.uniqID}>
+						<Image
+							className="rounded-md justify-self-center"
+							unoptimized
+							priority
+							src={purchase.image}
+							alt={purchase.title}
+							width={120}
+							height={120}
+							style={{ height: "30%", width: "30%" }}
+						/>
+						<div className="justify-self-center flex-col px-2">
+							<h2 className="mt-2 font-bold opacity-80 justify-self-center">
+								{purchase.title}
+							</h2>
+							<p className=" text-sm mt-2 mb-4 justify-self-center bg-black rounded-sm  text-white p-1">
+								Type➡️ <span className="">{purchase.category}</span>
+							</p>
+						</div>
+						<div className="mb-4">
+							<h4 className="italic underline text-sm font-bold">
+								Description
+							</h4>
+							<p className="text-sm px-2">{purchase.description}</p>
+						</div>
+						<div className="flex justify-end space-x-3 px-3 text-white mb-1">
+							<button
+								onClick={(e) => productPurchased(e, purchase)}
+								className="text-md font-bold custom-bg-color rounded-md px-4 h-8 shadow-md shadow-black border-b-1 border-b-black"
+							>
+								Purchased
+							</button>
+						</div>
+					</li>
+				);
+			});
+		};
+
 		if (content === "purchases") {
-			return <div>My purchases</div>;
+			return <ul>{displayPurchases()}</ul>;
 		}
 	};
 
@@ -126,10 +173,9 @@ const PlacedOrders = () => {
 		e: React.MouseEvent<HTMLButtonElement>,
 		item: OrderedProduct
 	) => {
-		console.log(e, item);
-		const res = await dispatch(addPurchase(item));
-
-		console.log(res);
+		router.push("/orders/mode-of-payment");
+		dispatch(addPurchase(item));
+		dispatch(removeOrder(item));
 	};
 
 	return (
