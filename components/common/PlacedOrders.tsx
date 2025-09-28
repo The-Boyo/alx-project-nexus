@@ -202,7 +202,7 @@ const PlacedOrders = () => {
 							<h4 className="italic underline text-sm font-bold">
 								Description
 							</h4>
-							<p className="text-sm">{toBuy.description}</p>
+							<p className="text-sm px-2">{toBuy.description}</p>
 						</div>
 						<div className="flex justify-end space-x-3 px-3 text-white mb-1">
 							<button
