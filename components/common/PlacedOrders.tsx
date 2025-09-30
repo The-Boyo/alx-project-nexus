@@ -12,7 +12,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { addPurchase } from "../../slices/purchasedItemsSlice";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { usePath } from "../../contexts/PathContexts";
 
 const PlacedOrders = () => {
 	const orders = useSelector((state: RootState) => state.orders.orders);
@@ -30,13 +31,18 @@ const PlacedOrders = () => {
 	//Navigation
 	const router = useRouter();
 
+	const pathname = usePathname();
+
+	const { setPath } = usePath();
+
 	useEffect(() => {
 		dispatch(fetchProducts(""));
+		setPath(pathname);
 
 		if (payStatus === "success") {
 			setContent("purchases");
 		}
-	}, [dispatch, payStatus]);
+	}, [dispatch, payStatus, pathname, setPath]);
 
 	const purchaseItem = (
 		event: React.MouseEvent<HTMLButtonElement>,
@@ -205,6 +211,15 @@ const PlacedOrders = () => {
 						}`}
 					>
 						Purchases
+					</button>
+					<button
+						onClick={() => {
+							setContent("cart");
+							router.push("/");
+						}}
+						className={`custom-bg-color px-2 min-w-[5em] h-[1.7em] rounded-md text-sm`}
+					>
+						Back to Shop
 					</button>
 				</nav>
 				{displayContent()}
