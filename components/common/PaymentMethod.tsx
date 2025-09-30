@@ -5,10 +5,11 @@ import { useEffect, useState } from "react";
 
 import mpesalogo from "../../public/assets/images/mpesa.png";
 import airtel from "../../public/assets/images/airtel.png";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { setPayStatus } from "../../slices/purchasedItemsSlice";
+import { usePath } from "../../contexts/PathContexts";
 
 const PaymentMethod = () => {
 	const [payMethod, setPayMethod] = useState("mpesa");
@@ -22,9 +23,16 @@ const PaymentMethod = () => {
 	//Navigation
 	const router = useRouter();
 
+	//Path context
+	const { setPath } = usePath();
+
+	//pathname
+	const pathname = usePathname();
+
 	useEffect(() => {
 		dispatch(setPayStatus("idle"));
-	});
+		setPath(pathname);
+	}, [setPath, dispatch, pathname]);
 
 	const phoneNumValidation = (val: string) => {
 		if (!val) {

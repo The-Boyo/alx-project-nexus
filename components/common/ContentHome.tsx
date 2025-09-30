@@ -7,7 +7,8 @@ import { fetchProducts, Product } from "../../slices/productSlice";
 import Image from "next/image";
 import { placeOrder } from "../../slices/orderSlice";
 import { generateUniqId } from "../../utils/utilities";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { usePath } from "../../contexts/PathContexts";
 
 export const shortenTitle = (title: string, num: number) => {
 	const allTitle = title.split(" ").join("");
@@ -59,13 +60,17 @@ const ContentHome = () => {
 
 	const addButtonRef = useRef(null);
 
+	const pathname = usePathname();
+
+	const { setPath } = usePath();
+
 	useEffect(() => {
 		if (status === "idle") {
 			dispatch(fetchProducts(""));
 		}
-	}, [status, dispatch]);
 
-	console.log(products);
+		setPath(pathname);
+	}, [status, dispatch, pathname, setPath]);
 
 	const displayProducts = (event: React.MouseEvent<HTMLButtonElement>) => {
 		const productCategory = event.currentTarget.className.split(" ")[1];
