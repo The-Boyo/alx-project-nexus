@@ -3,9 +3,28 @@
 import Link from "next/link";
 import Cart from "./Cart";
 import { usePath } from "../../contexts/PathContexts";
+import { useState } from "react";
+import { AppDispatch } from "../../store/store";
+import { useDispatch } from "react-redux";
+import { fetchProducts } from "../../slices/productSlice";
 
 const Header = () => {
+	const [searchInput, setSearchInput] = useState("");
+
 	const { path } = usePath();
+
+	const dispatch: AppDispatch = useDispatch();
+
+	const searchProduct = () => {
+		if (!searchInput) return;
+
+		try {
+			dispatch(fetchProducts(""));
+		} catch (err) {
+			console.error(err);
+			throw new Error("Error fetching product");
+		}
+	};
 
 	return (
 		<header
@@ -27,16 +46,21 @@ const Header = () => {
 					type="text"
 					placeholder="Search Item..."
 					className="border-2 border-white rounded-lg h-[2.5em] w-[60%] text-sm p-2 mr-3 text-white focus: outline-0"
+					value={searchInput}
+					onChange={(e) => setSearchInput(e.currentTarget.value)}
 				/>
-				<button className="h-[2.5em] w-[3.8em] rounded-md cursor-pointer bg-black text-sm focus:bg-[rgba(0,0,0,.5)]">
+				<button
+					onClick={() => searchProduct()}
+					className="h-[2.5em] w-[3.8em] rounded-md cursor-pointer bg-black text-sm focus:bg-[rgba(0,0,0,.5)]"
+				>
 					Search
 				</button>
 			</div>
 			<div className="grid grid-cols-2 gap-x-5 sm:gap-x-2 items-center mr-2 auth">
 				<Cart />
-				<div className="grid items-center bg-white rounded-full h-8 w-8 text-black text-center font-bold text-lg cursor-pointer">
+				{/* <div className="grid items-center bg-white rounded-full h-8 w-8 text-black text-center font-bold text-lg cursor-pointer">
 					E
-				</div>
+				</div> */}
 			</div>
 		</header>
 	);
