@@ -5,7 +5,7 @@ export interface OrderedProduct extends Product {
 	uniqID: string;
 }
 
-interface OrdersState {
+export interface OrdersState {
 	orders: OrderedProduct[] | [];
 }
 

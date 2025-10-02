@@ -9,6 +9,7 @@ import { placeOrder } from "../../slices/orderSlice";
 import { generateUniqId } from "../../utils/utilities";
 import { usePathname, useRouter } from "next/navigation";
 import { usePath } from "../../contexts/PathContexts";
+import Loader from "./Loader";
 
 export const shortenTitle = (title: string, num: number) => {
 	const allTitle = title.split(" ").join("");
@@ -101,8 +102,7 @@ const ContentHome = () => {
 	};
 
 	const renderProducts = () => {
-		if (status === "loading" || status === "idle")
-			return <h2 className="text-3xl font-extrabold">Loading...</h2>;
+		if (status === "loading" || status === "idle") return <Loader />;
 
 		if (status === "failed")
 			return <h3 className="text-red-500 text-xl">{error}</h3>;
